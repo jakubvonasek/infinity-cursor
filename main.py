@@ -1,3 +1,4 @@
+import os
 import sys
 import math
 import time
@@ -6,6 +7,13 @@ import pyautogui
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QSlider
 from PyQt6.QtGui import QFont, QCursor, QPixmap, QIcon
 from PyQt6.QtCore import Qt, QTimer, QPoint
+
+# Manually add environment variables
+os.environ['PATH'] = '/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin'
+os.environ['PYTHONPATH'] = sys.prefix  # Ensures Python dependencies load
+
+print(f"Current PATH: {os.environ['PATH']}")
+print(f"Current PYTHONPATH: {os.environ['PYTHONPATH']}")
 
 # Global variables
 running = False
@@ -67,8 +75,28 @@ class InfinityCursorApp(QWidget):
         self.speed_slider.valueChanged.connect(self.set_speed)
         layout.addWidget(self.speed_slider)
 
+        # Debugging label to show keypresses
+        self.debug_label = QLabel("🔍 Key Pressed: None")
+        self.debug_label.setFont(font)
+        self.debug_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(self.debug_label)
+
         self.setLayout(layout)
-        self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+
+        # Ensure window gets focus
+        self.activateWindow()
+        self.setFocus()
+
+    def keyPressEvent(self, event):
+        """Handle key events for starting/stopping the cursor movement."""
+        key_name = event.text() or str(event.key())
+        print(f"Key Pressed: {key_name}")  # Debugging in console
+        self.debug_label.setText(f"🔍 Key Pressed: {key_name}")  # Debugging in UI
+
+        if event.key() in (Qt.Key.Key_Enter, Qt.Key.Key_Return):
+            self.start_movement()
+        elif event.key() == Qt.Key.Key_Space:
+            self.stop_movement()
 
     def start_movement(self):
         global running
@@ -83,12 +111,6 @@ class InfinityCursorApp(QWidget):
     def set_speed(self, value):
         global speed
         speed = value / 2  # Convert slider value to loops per second (0.5 - 2)
-    
-    def keyPressEvent(self, event):
-        if event.key() == Qt.Key.Key_Space:
-            self.stop_movement()
-        elif event.key() == Qt.Key.Key_Enter or event.key() == Qt.Key.Key_Return:
-            self.start_movement()
 
 # Run Application
 if __name__ == "__main__":

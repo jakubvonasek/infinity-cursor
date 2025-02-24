@@ -1,0 +1,4 @@
+# Ignore build and dist files
+build/*
+dist/*
+InfinityCursor.spec

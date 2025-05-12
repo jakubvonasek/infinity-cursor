@@ -1,4 +1,4 @@
-# 🎛️ Infinity Cursor
+ji# 🎛️ Infinity Cursor
 
 Infinity Cursor is a sleek, modern desktop app that smoothly moves your mouse in an infinity-shaped loop **inside the app window**. Designed with PyQt6, it features a minimalist dark theme and easy keyboard controls.
 
@@ -45,7 +45,7 @@ python main.py
 ```
 
 ## 📸 Screenshots
-🚀 [Include a screenshot of the app here]
+🚀 [Will be added]
 
 ## 🤝 Contributing
 Feel free to open issues or submit pull requests if you have improvements.
@@ -54,4 +54,4 @@ Feel free to open issues or submit pull requests if you have improvements.
 MIT License. See `LICENSE` file for details.
 
 ## 🌟 Credits
-Developed by **[Your Name]**. Inspired by smooth cursor automation with PyQt6.
+Developed by **Jakub Vonasek**. Inspired by smooth cursor automation with PyQt6.

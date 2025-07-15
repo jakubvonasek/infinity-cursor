@@ -1,4 +1,4 @@
-ji# 🎛️ Infinity Cursor
+# ♾️ Infinity Cursor
 
 Infinity Cursor is a sleek, modern desktop app that smoothly moves your mouse in an infinity-shaped loop **inside the app window**. Designed with PyQt6, it features a minimalist dark theme and easy keyboard controls.
 

@@ -99,19 +99,19 @@ if [ -d "dist/$APP_NAME.app" ]; then
     echo "🔏 Signing the application..."
     codesign --force --deep --sign - "$APP_PATH"
 
-    # Check if Full Disk Access is granted
+    # Check if Accessibility is granted
     echo "🛠️  Checking system permissions..."
     TCC_DB="/Library/Application Support/com.apple.TCC/TCC.db"
     if [ -f "$TCC_DB" ]; then
-        FULL_DISK_ACCESS=$(sqlite3 "$TCC_DB" "SELECT * FROM access WHERE service='kTCCServiceAccessibility' AND client='$APP_PATH';")
-        if [[ -z "$FULL_DISK_ACCESS" ]]; then
-            echo "⚠️  WARNING: Full Disk Access is NOT granted."
-            echo "Go to System Settings → Privacy & Security → Full Disk Access → Add $APP_NAME"
+        ACCESSIBILITY_ACCESS=$(sqlite3 "$TCC_DB" "SELECT * FROM access WHERE service='kTCCServiceAccessibility' AND client='$APP_PATH';")
+        if [[ -z "$ACCESSIBILITY_ACCESS" ]]; then
+            echo "⚠️  WARNING: Accessibility is NOT granted."
+            echo "Go to System Settings → Privacy & Security → Accessibility → Add $APP_NAME"
         else
-            echo "✅ Full Disk Access is already granted."
+            echo "✅ Accessibility is already granted."
         fi
     else
-        echo "⚠️  Unable to check Full Disk Access permissions."
+        echo "⚠️  Unable to check Accessibility permissions."
     fi
 
     echo "🎉 Done! You can now open $APP_NAME from Applications."

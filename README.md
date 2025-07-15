@@ -39,6 +39,9 @@ chmod +x build.sh
 ```
 After building, **Infinity Cursor.app** will be moved to your `/Applications/` folder.
 
+THEN YOU NEED TO GO:
+Mac System Preferences > Security & Privacy > Privacy > Accessibility and allow the app so it can move your mouse cursor.
+
 ## 🏃‍♂️ Running the App
 ```bash
 python main.py

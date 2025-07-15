@@ -1,6 +1,6 @@
-# 🎛️ Infinity Cursor
+# 🎛️ Perpetuum
 
-Infinity Cursor is a sleek, modern desktop app that smoothly moves your mouse in an infinity-shaped loop **inside the app window**. Designed with PyQt6, it features a minimalist dark theme and easy keyboard controls.
+Perpetuum is a sleek, modern desktop app that smoothly moves your mouse in an infinity-shaped loop **inside the app window**. Designed with PyQt6, it features a minimalist dark theme and easy keyboard controls.
 
 ## 🚀 Features
 - **Infinity symbol cursor movement** within the app window
@@ -21,8 +21,8 @@ Infinity Cursor is a sleek, modern desktop app that smoothly moves your mouse in
 ### 📥 Setup
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/infinity-cursor.git
-cd infinity-cursor
+git clone https://github.com/yourusername/perpetuum.git
+cd perpetuum
 
 # Create a virtual environment
 python3 -m venv venv
@@ -37,7 +37,7 @@ pip install -r requirements.txt
 chmod +x build.sh
 ./build.sh
 ```
-After building, **Infinity Cursor.app** will be moved to your `/Applications/` folder.
+After building, **Perpetuum.app** will be moved to your `/Applications/` folder.
 
 THEN YOU NEED TO GO:
 Mac System Preferences > Security & Privacy > Privacy > Accessibility and allow the app so it can move your mouse cursor.

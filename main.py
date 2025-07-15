@@ -33,11 +33,11 @@ def move_cursor(window):
         t += 0.05
         time.sleep(1 / (speed * (2 * math.pi / 0.05)))  # Adjust sleep for whole loops
 
-class InfinityCursorApp(QWidget):
+class PerpetuumApp(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle("∞ Infinity Cursor")
+        self.setWindowTitle("∞ Perpetuum")
         self.setWindowIcon(QIcon("./logo.png"))  # Set app logo
         self.setGeometry(100, 100, 400, 300)
         self.setStyleSheet("background-color: #121212; color: white;")
@@ -50,7 +50,7 @@ class InfinityCursorApp(QWidget):
         layout.setSpacing(15)
 
         # Title
-        self.title_label = QLabel("∞ Infinity Cursor")
+        self.title_label = QLabel("∞ Perpetuum")
         self.title_label.setFont(QFont("Arial", 16, QFont.Weight.Bold))
         self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(self.title_label)
@@ -115,6 +115,6 @@ class InfinityCursorApp(QWidget):
 # Run Application
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = InfinityCursorApp()
+    window = PerpetuumApp()
     window.show()
     sys.exit(app.exec())

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define app name
-APP_NAME="InfinityCursor"
+APP_NAME="Perpetuum"
 ICON_FILE="./logo.png"
 SCRIPT_FILE="main.py"
 SPEC_FILE="InfinityCursor.spec"
@@ -65,7 +65,7 @@ app = BUNDLE(
     coll,
     name='$APP_NAME.app',
     icon='$ICON_FILE',
-    bundle_identifier="com.yourcompany.infinitycursor",
+    bundle_identifier="cz.jakubvonasek.perpetuum",
 )
 EOL
 

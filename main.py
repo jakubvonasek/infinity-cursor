@@ -1,120 +1,170 @@
-import os
 import sys
-import math
+import random
 import time
-import threading
+import webbrowser
 import pyautogui
-from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QSlider
-from PyQt6.QtGui import QFont, QCursor, QPixmap, QIcon
-from PyQt6.QtCore import Qt, QTimer, QPoint
+from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLineEdit, QLabel, QTextEdit, QGridLayout
+from PyQt6.QtCore import QTimer, Qt
+from PyQt6.QtGui import QIcon, QFont
 
-# Manually add environment variables
-os.environ['PATH'] = '/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin'
-os.environ['PYTHONPATH'] = sys.prefix  # Ensures Python dependencies load
-
-print(f"Current PATH: {os.environ['PATH']}")
-print(f"Current PYTHONPATH: {os.environ['PYTHONPATH']}")
-
-# Global variables
-running = False
-speed = 1.0  # Default speed (1 loop per second)
-
-def move_cursor(window):
-    global running, speed
-    A, B = window.width() // 4, window.height() // 4  # Width and height relative to the window
-    center_x, center_y = window.width() // 2, window.height() // 2
-    t = 0
-    
-    while running:
-        x = center_x + A * math.cos(t)
-        y = center_y + (B * math.sin(2 * t) / 2)
-        window.setCursor(QCursor())  # Ensure cursor object exists
-        window.cursor().setPos(window.mapToGlobal(QPoint(int(x), int(y))))
-        t += 0.05
-        time.sleep(1 / (speed * (2 * math.pi / 0.05)))  # Adjust sleep for whole loops
-
-class PerpetuumApp(QWidget):
+class Perpetuum(QMainWindow):
     def __init__(self):
         super().__init__()
-
-        self.setWindowTitle("∞ Perpetuum")
-        self.setWindowIcon(QIcon("./logo.png"))  # Set app logo
-        self.setGeometry(100, 100, 400, 300)
+        self.setWindowTitle("∞ Perpetuum - Eternea Update")
         self.setStyleSheet("background-color: #121212; color: white;")
+        self.setWindowIcon(QIcon('logo.png'))
+        self.is_running = False
+        self.default_urls = [
+            "https://news.ycombinator.com",
+            "https://www.bbc.com",
+            "https://www.stackoverflow.com",
+            "https://www.github.com",
+            "https://www.reddit.com"
+        ]
+        pyautogui.FAILSAFE = True
+        pyautogui.PAUSE = 0.5
+        self.initUI()
 
-        # Set font
-        font = QFont("Arial", 12, QFont.Weight.Bold)
-
-        # Layout
-        layout = QVBoxLayout()
-        layout.setSpacing(15)
+    def initUI(self):
+        central_widget = QWidget()
+        self.setCentralWidget(central_widget)
+        layout = QVBoxLayout(central_widget)
 
         # Title
-        self.title_label = QLabel("∞ Perpetuum")
-        self.title_label.setFont(QFont("Arial", 16, QFont.Weight.Bold))
-        self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        layout.addWidget(self.title_label)
+        title_label = QLabel("∞ Eternea")
+        title_label.setFont(QFont("Arial", 16, QFont.Weight.Bold))
+        title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(title_label)
 
-        # Instruction Label
-        self.helper_label = QLabel("Press ENTER to start, SPACE to stop")
-        self.helper_label.setFont(font)
-        self.helper_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        layout.addWidget(self.helper_label)
+        # URL configuration section
+        url_label = QLabel("Configure URLs:")
+        url_label.setFont(QFont("Arial", 12, QFont.Weight.Bold))
+        url_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(url_label)
 
-        # Speed Slider
-        self.speed_label = QLabel("⏳ Speed")
-        self.speed_label.setFont(font)
-        self.speed_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        layout.addWidget(self.speed_label)
+        # URL edit boxes in grid
+        url_grid = QGridLayout()
+        self.url_inputs = []
+        for i, url in enumerate(self.default_urls):
+            label = QLabel(f"URL {i+1}:")
+            label.setFont(QFont("Arial", 10, QFont.Weight.Bold))
+            label.setStyleSheet("margin-right: 10px;")
+            input_box = QLineEdit(url)
+            input_box.setStyleSheet("background: #1a1a1a; padding: 10px; border-radius: 5px; color: #cccccc;")
+            url_grid.addWidget(label, i, 0)
+            url_grid.addWidget(input_box, i, 1)
+            self.url_inputs.append(input_box)
+        layout.addLayout(url_grid)
 
-        self.speed_slider = QSlider(Qt.Orientation.Horizontal)
-        self.speed_slider.setMinimum(1)  # 0.5 loops per second
-        self.speed_slider.setMaximum(4)  # 2 loops per second
-        self.speed_slider.setValue(2)  # Default to 1 loop per second
-        self.speed_slider.setStyleSheet("background: #1E1E1E; padding: 10px; border-radius: 5px;")
-        self.speed_slider.valueChanged.connect(self.set_speed)
-        layout.addWidget(self.speed_slider)
+        # Status label
+        self.status_label = QLabel("Status: Stopped")
+        self.status_label.setFont(QFont("Arial", 12, QFont.Weight.Bold))
+        self.status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(self.status_label)
 
-        # Debugging label to show keypresses
-        self.debug_label = QLabel("🔍 Key Pressed: None")
-        self.debug_label.setFont(font)
-        self.debug_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        layout.addWidget(self.debug_label)
+        # Buttons
+        button_layout = QHBoxLayout()
+        self.start_button = QPushButton("Start (Enter)")
+        self.start_button.setFont(QFont("Arial", 12, QFont.Weight.Bold))
+        self.start_button.setStyleSheet("background: #1E1E1E; padding: 10px; border-radius: 5px; color: white;")
+        self.start_button.clicked.connect(self.start_simulation)
+        button_layout.addWidget(self.start_button)
 
-        self.setLayout(layout)
+        self.stop_button = QPushButton("Stop (Space)")
+        self.stop_button.setFont(QFont("Arial", 12, QFont.Weight.Bold))
+        self.stop_button.setStyleSheet("background: #1E1E1E; padding: 10px; border-radius: 5px; color: white;")
+        self.stop_button.clicked.connect(self.stop_simulation)
+        button_layout.addWidget(self.stop_button)
+        layout.addLayout(button_layout)
 
-        # Ensure window gets focus
-        self.activateWindow()
-        self.setFocus()
+        # Activity log
+        log_label = QLabel("Activity Log:")
+        log_label.setFont(QFont("Arial", 12, QFont.Weight.Bold))
+        log_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(log_label)
+
+        self.log_area = QTextEdit()
+        self.log_area.setStyleSheet("background: #1E1E1E; padding: 10px; border-radius: 5px; color: white;")
+        self.log_area.setMaximumHeight(150)
+        self.log_area.setReadOnly(True)
+        layout.addWidget(self.log_area)
+
+        # Timer for random actions
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.perform_random_action)
+
+    def log_activity(self, message):
+        timestamp = time.strftime("%H:%M:%S")
+        log_entry = f"[{timestamp}] {message}"
+        self.log_area.append(log_entry)
+        # auto-scroll to bottom
+        self.log_area.verticalScrollBar().setValue(self.log_area.verticalScrollBar().maximum())
 
     def keyPressEvent(self, event):
-        """Handle key events for starting/stopping the cursor movement."""
-        key_name = event.text() or str(event.key())
-        print(f"Key Pressed: {key_name}")  # Debugging in console
-        self.debug_label.setText(f"🔍 Key Pressed: {key_name}")  # Debugging in UI
-
-        if event.key() in (Qt.Key.Key_Enter, Qt.Key.Key_Return):
-            self.start_movement()
+        if event.key() == Qt.Key.Key_Enter or event.key() == Qt.Key.Key_Return:
+            self.start_simulation()
         elif event.key() == Qt.Key.Key_Space:
-            self.stop_movement()
+            self.stop_simulation()
 
-    def start_movement(self):
-        global running
-        if not running:
-            running = True
-            threading.Thread(target=move_cursor, args=(self,), daemon=True).start()
+    def start_simulation(self):
+        if not self.is_running:
+            self.is_running = True
+            self.status_label.setText("Status: Running")
+            self.log_activity("Simulation started")
+            # Get URLs from input boxes
+            self.urls = [input_box.text().strip() for input_box in self.url_inputs if input_box.text().strip()]
+            if not self.urls:
+                self.urls = self.default_urls
+            # skewed toward longer intervals: 10s to 3min, weighted toward longer times
+            min_time = 10000  # 10 seconds
+            max_time = 180000  # 3 minutes
+            # use exponential distribution to skew toward longer times
+            random_time = int(min_time + (max_time - min_time) * (random.random() ** 0.3))
+            self.timer.start(random_time)
 
-    def stop_movement(self):
-        global running
-        running = False
+    def stop_simulation(self):
+        if self.is_running:
+            self.is_running = False
+            self.status_label.setText("Status: Stopped")
+            self.log_activity("Simulation stopped")
+            self.timer.stop()
 
-    def set_speed(self, value):
-        global speed
-        speed = value / 2  # Convert slider value to loops per second (0.5 - 2)
+    def perform_random_action(self):
+        if not self.is_running:
+            return
+        actions = [
+            self.open_random_url,
+            self.switch_tab,
+            self.simulate_scroll
+        ]
+        random.choice(actions)()
+        # skewed toward longer intervals: 10s to 3min, weighted toward longer times
+        min_time = 10000  # 10 seconds
+        max_time = 180000  # 3 minutes
+        # use exponential distribution to skew toward longer times
+        random_time = int(min_time + (max_time - min_time) * (random.random() ** 0.3))
+        self.timer.start(random_time)
 
-# Run Application
-if __name__ == "__main__":
+    def open_random_url(self):
+        if self.urls:
+            url = random.choice(self.urls)
+            webbrowser.open(url)
+            self.log_activity(f"Opened URL: {url}")
+
+    def switch_tab(self):
+        pyautogui.hotkey('ctrl', 't') if sys.platform == 'darwin' else pyautogui.hotkey('ctrl', 'tab')
+        self.log_activity("Switched tab")
+
+    def simulate_scroll(self):
+        scroll_amount = random.randint(-300, 300)
+        pyautogui.scroll(scroll_amount)
+        self.log_activity(f"Scrolled {scroll_amount}")
+
+
+
+if __name__ == '__main__':
     app = QApplication(sys.argv)
-    window = PerpetuumApp()
+    window = Perpetuum()
+    window.resize(500, 400)
     window.show()
     sys.exit(app.exec())

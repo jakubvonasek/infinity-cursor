@@ -1,19 +1,10 @@
-import os
 import sys
 import math
 import time
 import threading
-import pyautogui
-from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QSlider
-from PyQt6.QtGui import QFont, QCursor, QPixmap, QIcon
-from PyQt6.QtCore import Qt, QTimer, QPoint
-
-# Manually add environment variables
-os.environ['PATH'] = '/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin'
-os.environ['PYTHONPATH'] = sys.prefix  # Ensures Python dependencies load
-
-print(f"Current PATH: {os.environ['PATH']}")
-print(f"Current PYTHONPATH: {os.environ['PYTHONPATH']}")
+from PyQt6.QtWidgets import QApplication, QWidget
+from PyQt6.QtGui import QCursor, QIcon
+from PyQt6.QtCore import Qt, QPoint
 
 # Global variables
 running = False
@@ -42,61 +33,13 @@ class PerpetuumApp(QWidget):
         self.setGeometry(100, 100, 400, 300)
         self.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
         self.setStyleSheet(
-            "background-color: #121212; color: white;"
+            "background-color: #121212;"
             "background-image: url(./logo.png); background-position: center; background-repeat: no-repeat;"
         )
-
-        # Set font
-        font = QFont("Arial", 12, QFont.Weight.Bold)
-
-        # Layout
-        layout = QVBoxLayout()
-        layout.setSpacing(15)
-
-        # Title
-        self.title_label = QLabel("÷ Perpetuum ÷")
-        self.title_label.setFont(QFont("Arial", 16, QFont.Weight.Bold))
-        self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        layout.addWidget(self.title_label)
-
-        # Instruction Label
-        self.helper_label = QLabel("Press ENTER to start, SPACE to stop")
-        self.helper_label.setFont(font)
-        self.helper_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        layout.addWidget(self.helper_label)
-
-        # Speed Slider
-        self.speed_label = QLabel("⏳ Speed")
-        self.speed_label.setFont(font)
-        self.speed_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        layout.addWidget(self.speed_label)
-
-        self.speed_slider = QSlider(Qt.Orientation.Horizontal)
-        self.speed_slider.setMinimum(1)  # 0.5 loops per second
-        self.speed_slider.setMaximum(4)  # 2 loops per second
-        self.speed_slider.setValue(2)  # Default to 1 loop per second
-        self.speed_slider.setStyleSheet("background: #1E1E1E; padding: 10px; border-radius: 5px;")
-        self.speed_slider.valueChanged.connect(self.set_speed)
-        layout.addWidget(self.speed_slider)
-
-        # Debugging label to show keypresses
-        self.debug_label = QLabel("🔍 Key Pressed: None")
-        self.debug_label.setFont(font)
-        self.debug_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        layout.addWidget(self.debug_label)
-
-        self.setLayout(layout)
-
-        # Ensure window gets focus
         self.activateWindow()
         self.setFocus()
 
     def keyPressEvent(self, event):
-        """Handle key events for starting/stopping the cursor movement."""
-        key_name = event.text() or str(event.key())
-        print(f"Key Pressed: {key_name}")  # Debugging in console
-        self.debug_label.setText(f"🔍 Key Pressed: {key_name}")  # Debugging in UI
-
         if event.key() in (Qt.Key.Key_Enter, Qt.Key.Key_Return):
             self.start_movement()
         elif event.key() == Qt.Key.Key_Space:
@@ -117,10 +60,6 @@ class PerpetuumApp(QWidget):
     def stop_movement(self):
         global running
         running = False
-
-    def set_speed(self, value):
-        global speed
-        speed = value / 2  # Convert slider value to loops per second (0.5 - 2)
 
 # Run Application
 if __name__ == "__main__":

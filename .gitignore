@@ -1,4 +1,11 @@
-# Ignore build and dist files
-build/*
-dist/*
+# Python
+__pycache__/
+venv/
+
+# PyInstaller build artifacts
+build/
+dist/
 InfinityCursor.spec
+
+# macOS
+.DS_Store

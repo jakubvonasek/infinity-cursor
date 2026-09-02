@@ -1,60 +1,10 @@
 # 🎛️ Perpetuum
 
-Perpetuum is a sleek, modern desktop app that smoothly moves your mouse in an infinity-shaped loop **inside the app window**. Designed with PyQt6, it features a minimalist dark theme and easy keyboard controls.
+Moves your mouse in an infinity loop inside the app window. `ENTER` to start, `SPACE` to stop.
 
-## 🚀 Features
-- **Infinity symbol cursor movement** within the app window
-- **Minimalist dark UI** with a modern aesthetic
-- **Keyboard controls**:
-  - `ENTER` → Start cursor movement
-  - `SPACE` → Stop cursor movement
-- **Adjustable speed** (from 0.5 to 2 loops per second)
-- **Custom app icon** (`logo.png`)
-- **Standalone macOS app build**
-
-## 🖥️ Installation
-### 🛠️ Requirements
-- **Python 3.7+**
-- **PyQt6**
-- **PyInstaller** (for building the app)
-
-### 📥 Setup
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/perpetuum.git
-cd perpetuum
-
-# Create a virtual environment
-python3 -m venv venv
-source venv/bin/activate  # On Windows use: venv\Scripts\activate
-
-# Install dependencies
+python3 -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
+python main.py          # run
+./build.sh               # build & install Perpetuum.app (needs Accessibility permission)
 ```
-
-## 🏗️ Building the App (macOS)
-```bash
-chmod +x build.sh
-./build.sh
-```
-After building, **Perpetuum.app** will be moved to your `/Applications/` folder.
-
-THEN YOU NEED TO GO:
-Mac System Preferences > Security & Privacy > Privacy > Accessibility and allow the app so it can move your mouse cursor.
-
-## 🏃‍♂️ Running the App
-```bash
-python main.py
-```
-
-## 📸 Screenshots
-🚀 [Include a screenshot of the app here]
-
-## 🤝 Contributing
-Feel free to open issues or submit pull requests if you have improvements.
-
-## 📜 License
-MIT License. See `LICENSE` file for details.
-
-## 🌟 Credits
-Developed by **[Your Name]**. Inspired by smooth cursor automation with PyQt6.

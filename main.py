@@ -37,10 +37,14 @@ class PerpetuumApp(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle("∞ Perpetuum")
+        self.setWindowTitle("«« ÷÷ PERPETUUM ÷÷ »»")
         self.setWindowIcon(QIcon("./logo.png"))  # Set app logo
         self.setGeometry(100, 100, 400, 300)
-        self.setStyleSheet("background-color: #121212; color: white;")
+        self.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
+        self.setStyleSheet(
+            "background-color: #121212; color: white;"
+            "background-image: url(./logo.png); background-position: center; background-repeat: no-repeat;"
+        )
 
         # Set font
         font = QFont("Arial", 12, QFont.Weight.Bold)
@@ -50,7 +54,7 @@ class PerpetuumApp(QWidget):
         layout.setSpacing(15)
 
         # Title
-        self.title_label = QLabel("∞ Perpetuum")
+        self.title_label = QLabel("÷ Perpetuum ÷")
         self.title_label.setFont(QFont("Arial", 16, QFont.Weight.Bold))
         self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(self.title_label)
@@ -97,6 +101,12 @@ class PerpetuumApp(QWidget):
             self.start_movement()
         elif event.key() == Qt.Key.Key_Space:
             self.stop_movement()
+
+    def mousePressEvent(self, event):
+        """Swallow clicks while the cursor is moving so they can't interrupt the flow."""
+        if running:
+            return
+        super().mousePressEvent(event)
 
     def start_movement(self):
         global running

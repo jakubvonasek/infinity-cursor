@@ -21,4 +21,4 @@ source venv/bin/activate && python main.py   # run
 
 ## Edit rules
 
-Philosophy: keep bloat minimal. Do smallest possible edits, same file, same globals-and-functions style. No new files, classes, deps, error handling, config, tests, or unrequested cleanup/refactors — including the naming mismatch above. If a change grows the line count, it needs a reason.
+Philosophy: keep bloat minimal. Do smallest possible edits, same file, same globals-and-functions style. No new files, classes, deps, error handling, config, tests, or unrequested cleanup/refactors — including the naming mismatch above. If a change grows the line count, it needs a reason. Finally, follow the ./««SACCRED DESIGN PATTERN»».md

@@ -1,4 +1,5 @@
 import sys
+import os
 import math
 import time
 import threading
@@ -9,6 +10,7 @@ from PyQt6.QtCore import Qt, QPoint
 # Global variables
 running = False
 speed = 1.0  # Default speed (1 loop per second)
+LOGO_PATH = os.path.join(getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__))), "logo.png")
 
 def move_cursor(window):
     global running, speed
@@ -29,9 +31,9 @@ class PerpetuumApp(QWidget):
         super().__init__()
 
         self.setWindowTitle("«« ÷÷ PERPETUUM ÷÷ »»")
-        self.setWindowIcon(QIcon("./logo.png"))  # Set app logo
+        self.setWindowIcon(QIcon(LOGO_PATH))  # Set app logo
         self.setGeometry(100, 100, 400, 300)
-        self.logo = QPixmap("./logo.png")
+        self.logo = QPixmap(LOGO_PATH)
         self.activateWindow()
         self.setFocus()
 

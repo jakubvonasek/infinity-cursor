@@ -4,13 +4,11 @@ import time
 import threading
 from PyQt6.QtWidgets import QApplication, QWidget
 from PyQt6.QtGui import QCursor, QIcon, QPainter, QPixmap
-from PyQt6.QtCore import Qt, QPoint, QTimer
+from PyQt6.QtCore import Qt, QPoint
 
 # Global variables
 running = False
 speed = 1.0  # Default speed (1 loop per second)
-running_time = 0.0
-idle_time = 0.0
 
 def move_cursor(window):
     global running, speed
@@ -30,34 +28,16 @@ class PerpetuumApp(QWidget):
     def __init__(self):
         super().__init__()
 
+        self.setWindowTitle("«« ÷÷ PERPETUUM ÷÷ »»")
         self.setWindowIcon(QIcon("./logo.png"))  # Set app logo
         self.setGeometry(100, 100, 400, 300)
         self.logo = QPixmap("./logo.png")
-        self.logo_opacity = 0.0
         self.activateWindow()
         self.setFocus()
-
-        self.entropy_timer = QTimer(self)
-        self.entropy_timer.timeout.connect(self.update_entropy)
-        self.entropy_timer.start(1000)
-        self.update_entropy()
-
-    def update_entropy(self):
-        global running_time, idle_time
-        if running:
-            running_time += 1
-        else:
-            idle_time += 1
-        total = running_time + idle_time
-        pct = running_time / total * 100 if total else 0
-        self.setWindowTitle(f"∞ {pct:.0f}% flow — {int(running_time)}s running / {int(idle_time)}s idle")
-        self.logo_opacity = pct / 100
-        self.update()
 
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.fillRect(self.rect(), Qt.GlobalColor.black)
-        painter.setOpacity(self.logo_opacity)
         x = (self.width() - self.logo.width()) // 2
         y = (self.height() - self.logo.height()) // 2
         painter.drawPixmap(x, y, self.logo)
